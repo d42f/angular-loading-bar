@@ -1,7 +1,7 @@
 /*! 
  * angular-loading-bar v0.4.3
  * https://chieffancypants.github.io/angular-loading-bar
- * Copyright (c) 2014 Wes Cruver
+ * Copyright (c) 2015 Wes Cruver
  * License: MIT
  */
 /*
@@ -174,6 +174,7 @@ angular.module('cfp.loadingBar', [])
         spinner = angular.element('<div id="loading-bar-spinner"><div class="spinner-icon"></div></div>');
 
       var incTimeout,
+        incFn,
         completeTimeout,
         started = false,
         status = 0;
@@ -185,7 +186,7 @@ angular.module('cfp.loadingBar', [])
       /**
        * Inserts the loading bar element into the dom, and sets it to 2%
        */
-      function _start() {
+      function _start(fn) {
         var $parent = $document.find($parentSelector);
         $timeout.cancel(completeTimeout);
 
@@ -204,6 +205,8 @@ angular.module('cfp.loadingBar', [])
         if (includeSpinner) {
           $animate.enter(spinner, $parent);
         }
+
+        incFn = fn;
 
         _set(startSize);
       }
@@ -262,6 +265,11 @@ angular.module('cfp.loadingBar', [])
         }
 
         var pct = _status() + rnd;
+
+        if (typeof incFn === 'function') {
+          pct = incFn() || pct;
+        }
+
         _set(pct);
       }
 

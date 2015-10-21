@@ -261,7 +261,7 @@ angular.module('cfp.loadingBar', [])
         var pct = _status() + rnd;
 
         if (typeof incFn === 'function') {
-          pct = incFn();
+          pct = incFn() || pct;
         }
 
         _set(pct);
